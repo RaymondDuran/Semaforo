@@ -11,7 +11,7 @@ function App() {
   useEffect(() => {
 
     const fetchTabla = async () => {
-      const response = await fetch('https://localhost:7279/api/');
+      const response = await fetch('http://localhost:9000/api/leer');
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

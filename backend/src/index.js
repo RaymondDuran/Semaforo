@@ -2,9 +2,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
 const pasosRoutes = require('./routes/pasos');
+var cors = require('cors')
 
 const app = express();
+app.use(cors())
 const port = process.env.PORT || 9000;
+
 
 // Middleware
 app.use(express.json());
