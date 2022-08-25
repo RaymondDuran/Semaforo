@@ -1,12 +1,46 @@
 import './App.css';
 import Phone from './Imagen/Phone.png';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'
 
 function App() {
   const [conteo, setConteo] = useState(15);
   const [tabla, setTabla] = useState([]);
 
-  
+  async function btnStop() {
+    const lat = (Math.random() * (999.999 - (-999.999)) + -999.999).toFixed(5);
+    const long = (Math.random() * (999.999 - (-999.999)) + -999.999).toFixed(5);
+
+    const response = await fetch('http://localhost:9000/api/add',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          pasos: 10,
+          ubicacion: lat + ", " + long
+        })
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    if (response.ok) {
+      const response = await fetch('http://localhost:9000/api/leer');
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const respuesta = await response.json();
+      if (respuesta) {
+        setTabla(respuesta);
+      }
+    }
+  }
+
+
 
   useEffect(() => {
 
@@ -36,7 +70,7 @@ function App() {
           </thead>
           <tbody>
             {tabla.map((fila, i) => (
-              <tr>
+              <tr key={i}>
                 <td>{fila.pasos}</td>
                 <td>{fila.ubicacion}</td>
               </tr>
@@ -47,19 +81,19 @@ function App() {
 
       </div>
       <div className='col'>
-        <div class="trafficlight">
-          <div class="protector"></div>
-          <div class="protector"></div>
-          <div class="protector"></div>
-          <div class="red" id="red"></div>
-          <div class="yellow" id="yellow"></div>
-          <div class="green" id="green"></div>
+        <div className="trafficlight">
+          <div className="protector"></div>
+          <div className="protector"></div>
+          <div className="protector"></div>
+          <div className="red" id="red"></div>
+          <div className="yellow" id="yellow"></div>
+          <div className="green" id="green"></div>
         </div>
 
       </div>
       <div className='col'>
         <img src={Phone} alt="Bue" className='phone ' />
-        <button className='Button '>STOP</button>
+        <button onClick={btnStop} className='Button '>STOP</button>
         <div className='contador'>
 
           <h6>Contador</h6>
